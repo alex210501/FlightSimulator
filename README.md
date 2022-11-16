@@ -15,11 +15,16 @@ A flight will contain :
 
 For the flight the API will do this :
 
-- GET the route by ID
+- GET the flight by ID
+- GET the route by ID 
 - GET the flightnumber 
 - GET the departure time 
 - GET the plane
 - GET the terminal
+
+-> app.get('/flight/:parametre') and then redirected to '/'
+
+Where parametre will be the flight's ID
 
 ### :cloud: The Routes    
 
@@ -37,6 +42,10 @@ For the route the API will do this :
 - GET the route's arrival airport by name
 - GET the route's flight time by ID
 
+-> app.get('/route/:parametre') and then redirected to '/'
+
+Where parametre will be the route's ID
+
 ### :airplane: The plane
 
 The plane will contain :
@@ -50,6 +59,10 @@ For the plane the API will do this :
 - GET the plane by ID
 - GET the company
 - GET the type of the plane
+
+-> app.get('/plane/:parametre') and then redirected to '/'
+
+Where parametre will be the plane's ID
 
 
 ### :tokyo_tower: The airport
@@ -66,5 +79,8 @@ For the airport the API will do this :
 - GET the name
 - GET the number of terminals
 
+-> app.get('/airport/:name') and then redirected to '/'
+
+Where parametre will be the airport's name
 
 
