@@ -4,9 +4,7 @@ let express = require('express');
 //Import router
 let router = express.Router();
 
-//let session = require('express-session');
-
-let FlightFunctions = require('./firstdb');
+let FlightFunctions = require('./FlightFunctions.js');
 
 /*
 
@@ -77,7 +75,6 @@ router.get('/airport/:airportid', FlightFunctions.getTheAirport);
 router.get('/airport/name/:airportid', FlightFunctions.getTheAirportName);
 
 router.get('/airport/terminalnumber/:airportid', FlightFunctions.getTheAirportTerminalNumber);
-
 
 
 //Export router to use it on server.js

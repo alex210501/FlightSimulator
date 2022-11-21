@@ -1,39 +1,29 @@
 
 //Import Aws-sdk
 const AWS = require('aws-sdk');
-//Import express
-let express = require('express');
 
 // Create the DynamoDB Client with the region you want
-const region = 'us-east-1';
-const dynamoDbClient = createDynamoDbClient(region);
-function createDynamoDbClient(regionName) {
-  // Set the region
-  AWS.config.update({region: regionName});
-  // Use the following config instead when using DynamoDB Local
-  AWS.config.update({region: 'localhost', endpoint: 'http://localhost:8081'});
-  return new AWS.DynamoDB();
+const dynamoDbClient = createDynamoDbClient();
+function createDynamoDbClient() {
+    // Use the following config instead when using DynamoDB Local
+    AWS.config.update({region: 'local', endpoint: 'http://localhost:8081'});
+    return new AWS.DynamoDB();
 }
-const getItemInput = createGetItemInput();
-
-function createGetItemInput() {
-    return {
-      "TableName": "Forum",
-      "Key": {
-        "ForumName": {
-          "S": "ForumName"
-        }
-      }
-    }
-  }
-
 
 
 exports.getTheFlight = async function(req, res){
+    //TODO : Change Value to real DB
+    const getItemInput = createGetItemInput();
+    function createGetItemInput() {
+        return {
+        "TableName": "Songs",
+            "Key": {
+                "Id": {"S": "1"},
+                "Metadata": {"S": "Month-01-2018"}
+            }}}
     const getItemOutput = await dynamoDbClient.getItem(getItemInput).promise();
-    console.info('GetItem executed successfully.');
-    console.log(getItemOutput);
-    console.log(req.params.flightid);
+    //console.log(getItemOutput);
+    //console.log(req.params.flightid);
     res.json({getItemOutput})
 }
 exports.getTheFlightRoute = function(req, res){
@@ -88,4 +78,3 @@ exports.getTheAirportName = function(req, res){
 exports.getTheAirportTerminalNumber = function(req, res){
     console.log(req.params.airportid);
 }
-
