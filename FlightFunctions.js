@@ -8,17 +8,35 @@ const dynamoDbClient = createDynamoDbClient();
 function createDynamoDbClient() {
     // Use the following config instead when using DynamoDB Local
     AWS.config.update({region: 'local', endpoint: 'http://localhost:8081'});
+    
     return new AWS.DynamoDB();
 }
 
 
+
 exports.getTheFlight = async function(req, res){
+    /*
+
+    TODO: Move all same function outside, only createQueryInput Stays
+
+    */
+
     const queryInput = createQueryInput(req.params.flightid);
      // Call DynamoDB's query API
-    executeQuery(dynamoDbClient, queryInput).then(() => {
-        console.info('Query API call has been executed.')
+        executeQuery(dynamoDbClient, queryInput).then(() => {
+            console.info('Query API call has been executed.')
+            }
+        );
+    async function executeQuery(dynamoDbClient, queryInput) {
+        // Call DynamoDB's query API
+        try {
+          const queryOutput = await dynamoDbClient.query(queryInput).promise();
+          console.info('Query successful.');
+          res.json(queryOutput);
+        } catch (err) {
+          handleQueryError(err);
         }
-    );
+      }
     function createQueryInput(req) {
         return {
           "TableName": "FLIGHT-SIMULATOR",
@@ -40,21 +58,48 @@ exports.getTheFlight = async function(req, res){
           }
         }
     }
-      
-      async function executeQuery(dynamoDbClient, queryInput) {
-        // Call DynamoDB's query API
-        try {
-          const queryOutput = await dynamoDbClient.query(queryInput).promise();
-          console.info('Query successful.');
-          res.json(queryOutput);
-        } catch (err) {
-          handleQueryError(err);
-        }
     }
-}
 exports.getTheFlightRoute = function(req, res){
-    console.log(req.params.flightid);
+    const queryInput = createQueryInput(req.params.flightid);
+    // Call DynamoDB's query API
+       executeQuery(dynamoDbClient, queryInput).then(() => {
+           console.info('Query API call has been executed.')
+           }
+       );
+   async function executeQuery(dynamoDbClient, queryInput) {
+       // Call DynamoDB's query API
+       try {
+         const queryOutput = await dynamoDbClient.query(queryInput).promise();
+         console.info('Query successful.');
+         res.json(queryOutput);
+       } catch (err) {
+         handleQueryError(err);
+       }
+     }
+
+    function createQueryInput(req) {
+        return {
+          "TableName": "FLIGHT-SIMULATOR",
+          "ScanIndexForward": true,
+          "ConsistentRead": false,
+          "KeyConditionExpression": "#089c0 = :089c0",
+          "FilterExpression": "#089c1 = :089c1",
+          "ExpressionAttributeValues": {
+            ":089c0": {
+              "S": "FLIGHT"
+            },
+            ":089c1": {
+              "N": req.slice(1).toString()
+            }
+          },
+          "ExpressionAttributeNames": {
+            "#089c0": "PK",
+            "#089c1": "RouteId"
+          }
+        }
+      }
 }
+
 exports.getTheFlightNumber = function(req, res){
     console.log(req.params.flightid);
 }
@@ -105,9 +150,9 @@ exports.getTheAirportTerminalNumber = function(req, res){
     console.log(req.params.airportid);
 }
 
-
-
-function handleGetItemError(err) {
+// Handles errors during Query execution. Use recommendations in error messages below to 
+// add error handling specific to your application use-case. 
+function handleQueryError(err) {
     if (!err) {
       console.error('Encountered error object was empty');
       return;
@@ -116,9 +161,9 @@ function handleGetItemError(err) {
       console.error(`An exception occurred, investigate and configure retry strategy. Error: ${JSON.stringify(err)}`);
       return;
     }
-    // here are no API specific errors to handle for GetItem, common DynamoDB API errors are handled below
+    // here are no API specific errors to handle for Query, common DynamoDB API errors are handled below
     handleCommonErrors(err);
-  }
+}
   
   function handleCommonErrors(err) {
     switch (err.code) {
