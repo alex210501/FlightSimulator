@@ -19,6 +19,6 @@ app.listen(port, function(){
 
 
 //Initialize DynamoDB
-//java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb -port X
+//java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb -port 8081
 //aws dynamodb list-tables --endpoint-url http://localhost:X
 //With X number of the port ex:8081
