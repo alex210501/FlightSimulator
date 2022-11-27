@@ -1,0 +1,226 @@
+{
+  "ModelName": "flight-simulator",
+  "ModelMetadata": {
+    "Author": "",
+    "DateCreated": "Nov 23, 2022, 10:59 AM",
+    "DateLastModified": "Nov 23, 2022, 11:24 AM",
+    "Description": "Database for the flight simulator",
+    "AWSService": "Amazon DynamoDB",
+    "Version": "3.0"
+  },
+  "DataModel": [
+    {
+      "TableName": "FLIGHT-SIMULATOR",
+      "KeyAttributes": {
+        "PartitionKey": {
+          "AttributeName": "PK",
+          "AttributeType": "S"
+        }
+      },
+      "NonKeyAttributes": [
+        {
+          "AttributeName": "RouteId",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "FlightNumber",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "DepartureTime",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "PlaneNumber",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "Terminal",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "DepartureAirport",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "ArrivalAirport",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "TimeOfFlight",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "CompanyName",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "PlaneType",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "IATA",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "OACI",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "CompanyCountry",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "PlaneQuantity",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "Constructor",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "Model",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "PlanePassengers",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "CruisingSpeed",
+          "AttributeType": "N"
+        },
+        {
+          "AttributeName": "MaxSpeed",
+          "AttributeType": "N"
+        }
+      ],
+      "TableData": [
+        {
+          "PK": {
+            "S": "FLIGHT"
+          },
+          "RouteId": {
+            "N": "1"
+          },
+          "FlightNumber": {
+            "S": "FR4855"
+          },
+          "DepartureTime": {
+            "N": "0"
+          },
+          "PlaneNumber": {
+            "S": "0"
+          },
+          "Terminal": {
+            "N": "1"
+          }
+        },
+        {
+          "PK": {
+            "S": "ROUTE"
+          },
+          "RouteId": {
+            "N": "1"
+          },
+          "DepartureAirport": {
+            "S": "Brussels"
+          },
+          "ArrivalAirport": {
+            "S": "Paris"
+          },
+          "TimeOfFlight": {
+            "N": "3600"
+          }
+        },
+        {
+          "PK": {
+            "S": "PLANE"
+          },
+          "PlaneNumber": {
+            "S": "0"
+          },
+          "CompanyName": {
+            "S": "Lufthansa"
+          },
+          "PlaneType": {
+            "S": "737 Max"
+          }
+        },
+        {
+          "PK": {
+            "S": "COMPANY"
+          },
+          "CompanyName": {
+            "S": "Lufthansa"
+          },
+          "IATA": {
+            "S": "LH"
+          },
+          "OACI": {
+            "S": "DLH"
+          },
+          "CompanyCountry": {
+            "S": "Germany"
+          },
+          "PlaneQuantity": {
+            "N": "279"
+          }
+        },
+        {
+          "PK": {
+            "S": "PLANE-TYPE"
+          },
+          "PlaneType": {
+            "S": "Boeing 737 MAX"
+          },
+          "Constructor": {
+            "S": "Boeing"
+          },
+          "Model": {
+            "S": "737 MAX"
+          },
+          "PlanePassengers": {
+            "N": "50"
+          },
+          "CruisingSpeed": {
+            "N": "850"
+          },
+          "MaxSpeed": {
+            "N": "1000"
+          }
+        }
+      ],
+      "DataAccess": {
+        "MySql": {}
+      },
+      "BillingMode": "PROVISIONED",
+      "ProvisionedCapacitySettings": {
+        "ProvisionedThroughput": {
+          "ReadCapacityUnits": 5,
+          "WriteCapacityUnits": 5
+        },
+        "AutoScalingRead": {
+          "ScalableTargetRequest": {
+            "MinCapacity": 1,
+            "MaxCapacity": 10,
+            "ServiceRole": "AWSServiceRoleForApplicationAutoScaling_DynamoDBTable"
+          },
+          "ScalingPolicyConfiguration": {
+            "TargetValue": 70
+          }
+        },
+        "AutoScalingWrite": {
+          "ScalableTargetRequest": {
+            "MinCapacity": 1,
+            "MaxCapacity": 10,
+            "ServiceRole": "AWSServiceRoleForApplicationAutoScaling_DynamoDBTable"
+          },
+          "ScalingPolicyConfiguration": {
+            "TargetValue": 70
+          }
+        }
+      }
+    }
+  ]
+}
