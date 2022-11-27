@@ -3,7 +3,7 @@
   "ModelMetadata": {
     "Author": "",
     "DateCreated": "Nov 23, 2022, 10:59 AM",
-    "DateLastModified": "Nov 23, 2022, 11:24 AM",
+    "DateLastModified": "Nov 27, 2022, 06:47 PM",
     "Description": "Database for the flight simulator",
     "AWSService": "Amazon DynamoDB",
     "Version": "3.0"
@@ -93,6 +93,26 @@
         {
           "AttributeName": "MaxSpeed",
           "AttributeType": "N"
+        },
+        {
+          "AttributeName": "AirportName",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "AirportAcronym",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "AirportCountry",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "AirportCity",
+          "AttributeType": "S"
+        },
+        {
+          "AttributeName": "AirportTerminal",
+          "AttributeType": "N"
         }
       ],
       "TableData": [
@@ -144,7 +164,7 @@
             "S": "Lufthansa"
           },
           "PlaneType": {
-            "S": "737 Max"
+            "S": "Boeing 737 MAX"
           }
         },
         {
@@ -188,6 +208,26 @@
           },
           "MaxSpeed": {
             "N": "1000"
+          }
+        },
+        {
+          "PK": {
+            "S": "AIRPORT"
+          },
+          "AirportName": {
+            "S": "Charles de Gaulle"
+          },
+          "AirportAcronym": {
+            "S": "CDG"
+          },
+          "AirportCountry": {
+            "S": "France"
+          },
+          "AirportCity": {
+            "S": "Paris"
+          },
+          "AirportTerminal": {
+            "N": "3"
           }
         }
       ],
