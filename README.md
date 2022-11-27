@@ -90,3 +90,62 @@ For the airport the API will do this :
 -> app.get('/airport/:airportid') and then redirected to '/'
 
 Where parameter will be the airport's name
+
+## :books: Database
+
+<table>
+    <thead>
+        <tr>
+            <th>Partition Key (PK)</th>
+            <th colspan=6>Attributes</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+        	<td>FLIGHT</td>
+            <td>RouteId</td>
+            <td>FlightNumber</td>
+            <td>DepartureTime</td>
+            <td>PlaneNumber</td>
+            <td>Terminal</td>
+        </tr>
+        <tr>
+        	<td>ROUTE</td>
+            <td>RouteId</td>
+            <td>DepartureAirport</td>
+            <td>ArrivalAirport</td>
+            <td>TimeOfFlight</td>
+        </tr>
+        <tr>
+        	<td>PLANE</td>
+            <td>PlaneNumber</td>
+            <td>CompanyName</td>
+            <td>PlaneType</td>
+        </tr>
+        <tr>
+        	<td>COMPANY</td>
+            <td>CompanyName</td>
+            <td>IATA</td>
+            <td>OACI</td>
+            <td>CompanyCountry</td>
+            <td>PlaneQuantity</td>
+        </tr>
+        <tr>
+        	<td>PLANE-TYPE</td>
+            <td>PlaneType</td>
+            <td>Constructor</td>
+            <td>Model</td>
+            <td>PlanePassengers</td>
+            <td>CruisingSpeed</td>
+            <td>MaxSpeed</td>
+        </tr>
+        <tr>
+        	<td>AIRPORT</td>
+            <td>AirportName</td>
+            <td>AirportAcronym</td>
+            <td>AirportCountry</td>
+            <td>AirportCountry</td>
+            <td>AirportTerminal</td>
+        </tr>
+    </tbody>
+</table>
