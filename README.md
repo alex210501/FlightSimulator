@@ -1,5 +1,13 @@
 # FlightSimulator
 
+## Start DynamoDB
+
+First you have to open a command prompt on your machine and then you should go to the "AmazonDb" folder on your machine.  
+
+For example : cd C:\Users\hugo2\Documents\MA1\AmazonDb  
+
+There you should execute this command to start the communication with the Dynamodb : java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
+
 
 ## :airplane: API requests descriptions   
 
