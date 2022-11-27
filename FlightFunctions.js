@@ -551,42 +551,7 @@ exports.getThePlaneType = function(req, res){
 
 
 exports.getTheAirport = function(req, res){
-  const queryInput = createQueryInput(req.params.planenumber);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-   );
-  async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-    try {
-      const queryOutput = await dynamoDbClient.query(queryInput).promise();
-      console.info('Query successful.');
-      res.json(queryOutput);
-    } catch (err) {
-      handleQueryError(err);
-      }
-  }
-
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#e14e0 = :e14e0",
-      "ProjectionExpression": "#e14e1,#e14e2",
-      "ExpressionAttributeValues": {
-        ":e14e0": {
-          "S": "PLANE"
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#e14e0": "PK",
-        "#e14e1": req.slice(1).toString(),
-        "#e14e2": "PlaneType"
-      }
-    }
-  }
+  // TODO : implement the airport request
 }
 
 
