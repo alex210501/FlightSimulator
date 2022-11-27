@@ -1,4 +1,3 @@
-
 //Import Aws-sdk
 const AWS = require('aws-sdk');
 const { json } = require('body-parser');
@@ -7,20 +6,54 @@ const { json } = require('body-parser');
 const dynamoDbClient = createDynamoDbClient();
 function createDynamoDbClient() {
     // Use the following config instead when using DynamoDB Local
-    AWS.config.update({region: 'local', endpoint: 'http://localhost:8081'});
+    AWS.config.update({region: 'local', endpoint: 'http://localhost:8000'});
     
     return new AWS.DynamoDB();
 }
 
 
-
 exports.getTheFlight = async function(req, res){
-    /*
-
-    No id in the database?
-
-    */
+  const queryInput = createQueryInput(req.params.flightnumber);
+  // Call DynamoDB's query API
+    executeQuery(dynamoDbClient, queryInput).then(() => {
+        console.info('Query API call has been executed.')
+        }
+    );
+  async function executeQuery(dynamoDbClient, queryInput) {
+    // Call DynamoDB's query API
+    try {
+      const queryOutput = await dynamoDbClient.query(queryInput).promise();
+      console.info('Query successful.');
+      res.json(queryOutput);
+    } catch (err) {
+      handleQueryError(err);
     }
+  }
+
+  function createQueryInput(req) {
+    return {
+      "TableName": "FLIGHT-SIMULATOR",
+      "ScanIndexForward": true,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#e14e0 = :e14e0",
+      "FilterExpression": "#e14e1 = :e14e1",
+      "ExpressionAttributeValues": {
+        ":e14e0": {
+          "S": "FLIGHT"
+        },
+        ":e14e1": {
+          "S": req.slice(1).toString()
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#e14e0": "PK",
+        "#e14e1": "FlightNumber"
+      }
+    }
+  }
+}
+
+
 exports.getTheFlightRoute = async function(req, res){
     /*
 
@@ -28,7 +61,7 @@ exports.getTheFlightRoute = async function(req, res){
 
     */
 
-    const queryInput = createQueryInput(req.params.flightid);
+    const queryInput = createQueryInput(req.params.flightnumber);
     // Call DynamoDB's query API
        executeQuery(dynamoDbClient, queryInput).then(() => {
            console.info('Query API call has been executed.')
@@ -69,7 +102,7 @@ exports.getTheFlightRoute = async function(req, res){
 exports.getTheFlightNumber = async function(req, res){
     
 
-    const queryInput = createQueryInput(req.params.flightid);
+    const queryInput = createQueryInput(req.params.flightnumber);
      // Call DynamoDB's query API
         executeQuery(dynamoDbClient, queryInput).then(() => {
             console.info('Query API call has been executed.')
@@ -107,48 +140,128 @@ exports.getTheFlightNumber = async function(req, res){
         }
     }
 }
+
+
 exports.getTheFlightDeparture = async function(req, res){
-    const queryInput = createQueryInput(req.params.flightid);
-     // Call DynamoDB's query API
-        executeQuery(dynamoDbClient, queryInput).then(() => {
-            console.info('Query API call has been executed.')
-            }
-        );
-    async function executeQuery(dynamoDbClient, queryInput) {
-        // Call DynamoDB's query API
-        try {
-          const queryOutput = await dynamoDbClient.query(queryInput).promise();
-          console.info('Query successful.');
-          res.json(queryOutput);
-        } catch (err) {
-          handleQueryError(err);
+  const queryInput = createQueryInput(req.params.flightnumber);
+  // Call DynamoDB's query API
+    executeQuery(dynamoDbClient, queryInput).then(() => {
+        console.info('Query API call has been executed.')
         }
-      }
-      function createQueryInput(req) {
-        return {
-          "TableName": "FLIGHT-SIMULATOR",
-          "ScanIndexForward": true,
-          "ConsistentRead": false,
-          "KeyConditionExpression": "#ffe82 = :ffe82",
-          "ProjectionExpression": "#ffe80,#ffe81",
-          "ExpressionAttributeValues": {
-            ":ffe82": {
-              "S": "FLIGHT"
-            }
-          },
-          "ExpressionAttributeNames": {
-            "#ffe80": req.slice(1).toString(),
-            "#ffe81": "DepartureTime",
-            "#ffe82": "PK"
-          }
+  );
+
+  async function executeQuery(dynamoDbClient, queryInput) {
+    // Call DynamoDB's query API
+    try {
+      const queryOutput = await dynamoDbClient.query(queryInput).promise();
+      console.info('Query successful.');
+      res.json(queryOutput);
+    } catch (err) {
+      handleQueryError(err);
+    }
+  }
+
+  function createQueryInput(req) {
+    return {
+      "TableName": "FLIGHT-SIMULATOR",
+      "ScanIndexForward": true,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#ffe82 = :ffe82",
+      "ProjectionExpression": "#ffe80,#ffe81",
+      "ExpressionAttributeValues": {
+        ":ffe82": {
+          "S": "FLIGHT"
         }
+      },
+      "ExpressionAttributeNames": {
+        "#ffe80": req.slice(1).toString(),
+        "#ffe81": "DepartureTime",
+        "#ffe82": "PK"
       }
+    }
+  }
 }
+
+
 exports.getTheFlightPlane = function(req, res){
-    console.log(req.params.flightid);
+  const queryInput = createQueryInput(req.params.flightnumber);
+  // Call DynamoDB's query API
+  executeQuery(dynamoDbClient, queryInput).then(() => {
+      console.info('Query API call has been executed.')
+      }
+  );
+
+  async function executeQuery(dynamoDbClient, queryInput) {
+  // Call DynamoDB's query API
+    try {
+      const queryOutput = await dynamoDbClient.query(queryInput).promise();
+      console.info('Query successful.');
+      res.json(queryOutput);
+    } catch (err) {
+      handleQueryError(err);
+    }
+  }
+  
+  function createQueryInput(req) {
+    return {
+      "TableName": "FLIGHT-SIMULATOR",
+      "ScanIndexForward": true,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#ffe82 = :ffe82",
+      "ProjectionExpression": "#ffe80,#ffe81",
+      "ExpressionAttributeValues": {
+        ":ffe82": {
+          "S": "FLIGHT"
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#ffe80": req.slice(1).toString(),
+        "#ffe81": "PlaneNumber",
+        "#ffe82": "PK"
+      }
+    }
+  }
 }
+
+
 exports.getTheFlightPlaneTerminal = function(req, res){
-    console.log(req.params.flightid);
+  const queryInput = createQueryInput(req.params.flightnumber);
+  // Call DynamoDB's query API
+  executeQuery(dynamoDbClient, queryInput).then(() => {
+      console.info('Query API call has been executed.')
+      }
+  );
+
+  async function executeQuery(dynamoDbClient, queryInput) {
+  // Call DynamoDB's query API
+    try {
+      const queryOutput = await dynamoDbClient.query(queryInput).promise();
+      console.info('Query successful.');
+      res.json(queryOutput);
+    } catch (err) {
+      handleQueryError(err);
+    }
+  }
+  
+  function createQueryInput(req) {
+    return {
+      "TableName": "FLIGHT-SIMULATOR",
+      "ScanIndexForward": true,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#ffe82 = :ffe82",
+      "ProjectionExpression": "#ffe80,#ffe81",
+      "ExpressionAttributeValues": {
+        ":ffe82": {
+          "S": "FLIGHT"
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#ffe80": req.slice(1).toString(),
+        "#ffe81": "Terminal",
+        "#ffe82": "PK"
+      }
+    }
+  }
 }
 
 
@@ -193,6 +306,8 @@ exports.getTheRoute = function(req, res){
     }
   }
 }
+
+
 exports.getTheRouteDeparture = function(req, res){
   const queryInput = createQueryInput(req.params.routeid);
   // Call DynamoDB's query API
@@ -231,6 +346,8 @@ exports.getTheRouteDeparture = function(req, res){
     }
   }
 }
+
+
 exports.getTheRouteArrivalAirport = function(req, res){
   const queryInput = createQueryInput(req.params.routeid);
   // Call DynamoDB's query API
@@ -269,6 +386,8 @@ exports.getTheRouteArrivalAirport = function(req, res){
     }
   }
 }
+
+
 exports.getTheRouteFlightTime = function(req, res){
   const queryInput = createQueryInput(req.params.routeid);
   // Call DynamoDB's query API
@@ -310,25 +429,176 @@ exports.getTheRouteFlightTime = function(req, res){
 
 
 exports.getThePlane = function(req, res){
-    console.log(req.params.planeid);
+  const queryInput = createQueryInput(req.params.planenumber);
+  // Call DynamoDB's query API
+  executeQuery(dynamoDbClient, queryInput).then(() => {
+      console.info('Query API call has been executed.')
+      }
+   );
+    async function executeQuery(dynamoDbClient, queryInput) {
+  // Call DynamoDB's query API
+  try {
+    const queryOutput = await dynamoDbClient.query(queryInput).promise();
+    console.info('Query successful.');
+    res.json(queryOutput);
+  } catch (err) {
+    handleQueryError(err);
+    }
+  }
+
+  function createQueryInput(req) {
+    return {
+      "TableName": "FLIGHT-SIMULATOR",
+      "ScanIndexForward": true,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#e14e0 = :e14e0",
+      "FilterExpression": "#e14e1 = :e14e1",
+      "ExpressionAttributeValues": {
+        ":e14e0": {
+          "S": "PLANE"
+        },
+        ":e14e1": {
+          "S": req.slice(1).toString()
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#e14e0": "PK",
+        "#e14e1": "PlaneNumber"
+      }
+    }
+  }
 }
+
+
 exports.getThePlaneCompany = function(req, res){
-    console.log(req.params.planeid);
+    const queryInput = createQueryInput(req.params.planenumber);
+    // Call DynamoDB's query API
+    executeQuery(dynamoDbClient, queryInput).then(() => {
+        console.info('Query API call has been executed.')
+        }
+     );
+    async function executeQuery(dynamoDbClient, queryInput) {
+    // Call DynamoDB's query API
+      try {
+        const queryOutput = await dynamoDbClient.query(queryInput).promise();
+        console.info('Query successful.');
+        res.json(queryOutput);
+      } catch (err) {
+        handleQueryError(err);
+        }
+    }
+  
+    function createQueryInput(req) {
+      return {
+        "TableName": "FLIGHT-SIMULATOR",
+        "ScanIndexForward": true,
+        "ConsistentRead": false,
+        "KeyConditionExpression": "#e14e0 = :e14e0",
+        "ProjectionExpression": "#e14e1,#e14e2",
+        "ExpressionAttributeValues": {
+          ":e14e0": {
+            "S": "PLANE"
+          }
+        },
+        "ExpressionAttributeNames": {
+          "#e14e0": "PK",
+          "#e14e1": req.slice(1).toString(),
+          "#e14e2": "CompanyName"
+        }
+      }
+    }
 }
+
+
 exports.getThePlaneType = function(req, res){
-    console.log(req.params.planeid);
+  const queryInput = createQueryInput(req.params.planenumber);
+  // Call DynamoDB's query API
+  executeQuery(dynamoDbClient, queryInput).then(() => {
+      console.info('Query API call has been executed.')
+      }
+   );
+  async function executeQuery(dynamoDbClient, queryInput) {
+  // Call DynamoDB's query API
+    try {
+      const queryOutput = await dynamoDbClient.query(queryInput).promise();
+      console.info('Query successful.');
+      res.json(queryOutput);
+    } catch (err) {
+      handleQueryError(err);
+      }
+  }
+
+  function createQueryInput(req) {
+    return {
+      "TableName": "FLIGHT-SIMULATOR",
+      "ScanIndexForward": true,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#e14e0 = :e14e0",
+      "ProjectionExpression": "#e14e1,#e14e2",
+      "ExpressionAttributeValues": {
+        ":e14e0": {
+          "S": "PLANE"
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#e14e0": "PK",
+        "#e14e1": req.slice(1).toString(),
+        "#e14e2": "PlaneType"
+      }
+    }
+  }
 }
 
 
 exports.getTheAirport = function(req, res){
-    console.log(req.params.airportid);
+  const queryInput = createQueryInput(req.params.planenumber);
+  // Call DynamoDB's query API
+  executeQuery(dynamoDbClient, queryInput).then(() => {
+      console.info('Query API call has been executed.')
+      }
+   );
+  async function executeQuery(dynamoDbClient, queryInput) {
+  // Call DynamoDB's query API
+    try {
+      const queryOutput = await dynamoDbClient.query(queryInput).promise();
+      console.info('Query successful.');
+      res.json(queryOutput);
+    } catch (err) {
+      handleQueryError(err);
+      }
+  }
+
+  function createQueryInput(req) {
+    return {
+      "TableName": "FLIGHT-SIMULATOR",
+      "ScanIndexForward": true,
+      "ConsistentRead": false,
+      "KeyConditionExpression": "#e14e0 = :e14e0",
+      "ProjectionExpression": "#e14e1,#e14e2",
+      "ExpressionAttributeValues": {
+        ":e14e0": {
+          "S": "PLANE"
+        }
+      },
+      "ExpressionAttributeNames": {
+        "#e14e0": "PK",
+        "#e14e1": req.slice(1).toString(),
+        "#e14e2": "PlaneType"
+      }
+    }
+  }
 }
+
+
 exports.getTheAirportName = function(req, res){
     console.log(req.params.airportid);
 }
+
+
 exports.getTheAirportTerminalNumber = function(req, res){
     console.log(req.params.airportid);
 }
+
 
 // Handles errors during Query execution. Use recommendations in error messages below to 
 // add error handling specific to your application use-case. 

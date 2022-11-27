@@ -17,17 +17,17 @@ let FlightFunctions = require('./FlightFunctions.js');
 
  */
 
-router.get('/flight/:flightid', FlightFunctions.getTheFlight);
+router.get('/flight/:flightnumber', FlightFunctions.getTheFlight);
 
-router.get('/flight/flightroute/:flightid', FlightFunctions.getTheFlightRoute);
+router.get('/flight/flightroute/:flightnumber', FlightFunctions.getTheFlightRoute);
 
-router.get('/flight/flightnumber/:flightid', FlightFunctions.getTheFlightNumber);
+router.get('/flight/flightnumber/:flightnumber', FlightFunctions.getTheFlightNumber);
 
-router.get('/flight/departuretime/:flightid', FlightFunctions.getTheFlightDeparture);
+router.get('/flight/departuretime/:flightnumber', FlightFunctions.getTheFlightDeparture);
 
-router.get('/flight/plane/:flightid', FlightFunctions.getTheFlightPlane);
+router.get('/flight/plane/:flightnumber', FlightFunctions.getTheFlightPlane);
 
-router.get('/flight/terminal/:flightid', FlightFunctions.getTheFlightPlaneTerminal);
+router.get('/flight/terminal/:flightnumber', FlightFunctions.getTheFlightPlaneTerminal);
 
 
 /*
@@ -55,11 +55,11 @@ router.get('/route/flighttime/:routeid', FlightFunctions.getTheRouteFlightTime);
     - GET the type of the plane
 
 */
-router.get('/plane/:planeid', FlightFunctions.getThePlane);
+router.get('/plane/:planenumber', FlightFunctions.getThePlane);
 
-router.get('/plane/company/:planeid', FlightFunctions.getThePlaneCompany);
+router.get('/plane/company/:planenumber', FlightFunctions.getThePlaneCompany);
 
-router.get('/plane/type/:planeid', FlightFunctions.getThePlaneType);
+router.get('/plane/type/:planenumber', FlightFunctions.getThePlaneType);
 
 
 
