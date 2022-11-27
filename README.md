@@ -93,6 +93,8 @@ Where parameter will be the airport's name
 
 ## :books: Database
 
+You can download the database table using the file [database][database-file].
+
 <table>
     <thead>
         <tr>
@@ -149,3 +151,5 @@ Where parameter will be the airport's name
         </tr>
     </tbody>
 </table>
+
+[database-file]: ./flight-simulator.json
