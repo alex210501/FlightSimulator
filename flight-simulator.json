@@ -3,7 +3,7 @@
   "ModelMetadata": {
     "Author": "",
     "DateCreated": "Nov 23, 2022, 10:59 AM",
-    "DateLastModified": "Nov 27, 2022, 06:47 PM",
+    "DateLastModified": "Nov 28, 2022, 02:09 PM",
     "Description": "Database for the flight simulator",
     "AWSService": "Amazon DynamoDB",
     "Version": "3.0"
@@ -15,15 +15,15 @@
         "PartitionKey": {
           "AttributeName": "PK",
           "AttributeType": "S"
+        },
+        "SortKey": {
+          "AttributeName": "SK",
+          "AttributeType": "S"
         }
       },
       "NonKeyAttributes": [
         {
-          "AttributeName": "RouteId",
-          "AttributeType": "N"
-        },
-        {
-          "AttributeName": "FlightNumber",
+          "AttributeName": "Flight",
           "AttributeType": "S"
         },
         {
@@ -31,7 +31,7 @@
           "AttributeType": "N"
         },
         {
-          "AttributeName": "PlaneNumber",
+          "AttributeName": "Plane",
           "AttributeType": "S"
         },
         {
@@ -51,7 +51,7 @@
           "AttributeType": "N"
         },
         {
-          "AttributeName": "CompanyName",
+          "AttributeName": "Company",
           "AttributeType": "S"
         },
         {
@@ -113,6 +113,10 @@
         {
           "AttributeName": "AirportTerminal",
           "AttributeType": "N"
+        },
+        {
+          "AttributeName": "Route",
+          "AttributeType": "S"
         }
       ],
       "TableData": [
@@ -120,34 +124,34 @@
           "PK": {
             "S": "FLIGHT"
           },
-          "RouteId": {
-            "N": "1"
-          },
-          "FlightNumber": {
+          "SK": {
             "S": "FR4855"
           },
           "DepartureTime": {
             "N": "0"
           },
-          "PlaneNumber": {
+          "Plane": {
             "S": "0"
           },
           "Terminal": {
             "N": "1"
+          },
+          "Route": {
+            "S": "CDG-MDM"
           }
         },
         {
           "PK": {
             "S": "ROUTE"
           },
-          "RouteId": {
-            "N": "1"
+          "SK": {
+            "S": "CDG-MDM"
           },
           "DepartureAirport": {
-            "S": "Brussels"
+            "S": "Charles de Gaulle"
           },
           "ArrivalAirport": {
-            "S": "Paris"
+            "S": "Adolpho-Suarez"
           },
           "TimeOfFlight": {
             "N": "3600"
@@ -157,21 +161,21 @@
           "PK": {
             "S": "PLANE"
           },
-          "PlaneNumber": {
+          "SK": {
             "S": "0"
           },
-          "CompanyName": {
+          "Company": {
             "S": "Lufthansa"
           },
           "PlaneType": {
-            "S": "Boeing 737 MAX"
+            "S": "Boeing 373 MAX"
           }
         },
         {
           "PK": {
             "S": "COMPANY"
           },
-          "CompanyName": {
+          "SK": {
             "S": "Lufthansa"
           },
           "IATA": {
@@ -191,8 +195,8 @@
           "PK": {
             "S": "PLANE-TYPE"
           },
-          "PlaneType": {
-            "S": "Boeing 737 MAX"
+          "SK": {
+            "S": "Boeing 373 MAX"
           },
           "Constructor": {
             "S": "Boeing"
@@ -214,7 +218,7 @@
           "PK": {
             "S": "AIRPORT"
           },
-          "AirportName": {
+          "SK": {
             "S": "Charles de Gaulle"
           },
           "AirportAcronym": {
@@ -225,6 +229,26 @@
           },
           "AirportCity": {
             "S": "Paris"
+          },
+          "AirportTerminal": {
+            "N": "3"
+          }
+        },
+        {
+          "PK": {
+            "S": "AIRPORT"
+          },
+          "SK": {
+            "S": "Adolpho-Suarez"
+          },
+          "AirportAcronym": {
+            "S": "MDM"
+          },
+          "AirportCountry": {
+            "S": "Spain"
+          },
+          "AirportCity": {
+            "S": "Madrid"
           },
           "AirportTerminal": {
             "N": "3"
