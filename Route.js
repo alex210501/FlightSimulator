@@ -17,6 +17,8 @@ let FlightFunctions = require('./FlightFunctions.js');
 
  */
 
+//router.get('/flight/alldata/:flightnumber', FlightFunctions.getTheAlltheFlightInfo);
+
 router.get('/flight/:flightnumber', FlightFunctions.getTheFlight);
 
 router.get('/flight/flightroute/:flightnumber', FlightFunctions.getTheFlightRoute);
@@ -70,11 +72,11 @@ router.get('/plane/type/:planenumber', FlightFunctions.getThePlaneType);
     - GET the number of terminals
 
 */
-router.get('/airport/:airportid', FlightFunctions.getTheAirport);
+router.get('/airport/:airportacronym', FlightFunctions.getTheAirport);
 
-router.get('/airport/name/:airportid', FlightFunctions.getTheAirportName);
+router.get('/airport/name/:airportacronym', FlightFunctions.getTheAirportName);
 
-router.get('/airport/terminalnumber/:airportid', FlightFunctions.getTheAirportTerminalNumber);
+router.get('/airport/terminalnumber/:airportacronym', FlightFunctions.getTheAirportTerminalNumber);
 
 
 //Export router to use it on server.js
