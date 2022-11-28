@@ -16,618 +16,110 @@ function createDynamoDbClient() {
 }
 
 
+
+/*
+    ***********************************************************************************************
+    *                                                                                             *
+    * Request for the flight that contains also the route, the departure and the arrival airports *
+    *                                                                                             *
+    ***********************************************************************************************
+*/
+
+
 exports.getTheFlight = async function(req, res){
   
-  let myprequest = new PrimaryKeyQueryRequest("FLIGHT", req.params.flightnumber, "FlightNumber");
-  const queryInput = myprequest.createQueryInput();
+  let jsonResult = {};
+  let flightrequest = new PrimaryKeyQueryRequest("FLIGHT", req.params.flightnumber.slice(1).toString());
+  const queryInput = flightrequest.createQueryInput();
+
+  try {
+    const queryOutput = dynamoDbClient.query(queryInput).promise().then(async (flight) => {
+
+      let routerequest = new PrimaryKeyQueryRequest("ROUTE", flight.Items[0].Route.S);
+      const queryrouteInput = routerequest.createQueryInput();
+      const queryrouteOutput = await dynamoDbClient.query(queryrouteInput).promise();
+      jsonResult = flight.Items[0];
+
+      jsonResult.Route = {
+        J: queryrouteOutput.Items[0]
+      };
+
+      let depairportrequest = new PrimaryKeyQueryRequest("AIRPORT", queryrouteOutput.Items[0].DepartureAirport.S);
+      const querydepInput = depairportrequest.createQueryInput();
+      const querydepOutput = await dynamoDbClient.query(querydepInput).promise();
+
+      jsonResult.DepartureAirport = {
+        J: querydepOutput.Items[0]
+      };
+
+      
+      let arvairportrequest = new PrimaryKeyQueryRequest("AIRPORT", queryrouteOutput.Items[0].ArrivalAirport.S);
+      const queryarvInput = arvairportrequest.createQueryInput();
+      const queryarvOutput = await dynamoDbClient.query(queryarvInput).promise();
+
+      jsonResult.ArrivalAirport = {
+        J: queryarvOutput.Items[0]
+      };
+      
+     
+      res.json(jsonResult);
+      
+    });
+
+  } catch (err) {
+    handleQueryError(err);
+  }
+}
+
+
+/*
+    ***********************************************************************************************
+    *                                                                                             *
+    *         Request for the plane that also contains the plane-type and the company             *
+    *                                                                                             *
+    ***********************************************************************************************
+*/
+
+exports.getThePlane = async function(req, res){
   
-  try {
-    const queryOutput = await dynamoDbClient.query(queryInput).promise();
-    console.info('Query successful.');
-    res.json(queryOutput);
-  } catch (err) {
-    handleQueryError(err);
-  }
-}
+  let jsonResult = {};
+  let planerequest = new PrimaryKeyQueryRequest("PLANE", req.params.planenumber.slice(1).toString());
+  const queryInput = planerequest.createQueryInput();
 
-exports.getTheAlltheFlightInfo = async function(req, res){
+  try {
   
-  let myprequest = new PrimaryKeyQueryRequest("FLIGHT", req.params.flightnumber, "FlightNumber");
-  const queryInput = myprequest.createQueryInput();
-  let testObject = {};
-  
-  try {
-    /*const queryOutput = await dynamoDbClient.query(queryInput).promise();
-    console.info('Query successful.');
-    res.json(queryOutput); */
-    try {
-      const queryOutput = dynamoDbClient.query(queryInput).promise().then(async (flight) => {
-        let test = new PrimaryKeyQueryRequest("ROUTE", flight.Items[0].RouteId.N, "RouteId")
-        const testQuery = test.createQueryInputInteger();
-        const testOutput = await dynamoDbClient.query(testQuery).promise();
-        testObject = flight.Items[0];
+    const queryOutput = dynamoDbClient.query(queryInput).promise().then(async (plane) => {
 
-        testObject.Route = {
-          J: testOutput.Items[0]
-        };
+      let companyrequest = new PrimaryKeyQueryRequest("COMPANY", plane.Items[0].Company.S);
+      const querycompanyInput = companyrequest.createQueryInput();
+      const querycompanyOutput = await dynamoDbClient.query(querycompanyInput).promise();
+      jsonResult = plane.Items[0];
 
-        let departureAirport = new PrimaryKeyQueryRequest("AIRPORT", flight.Items[0].DepartureAirport.S, "AirportName")
-        const departureAirportQuery = test.createQueryInput();
-        let airportAirport = new PrimaryKeyQueryRequest("AIRPORT", flight.Items[0].ArrivalAirport.S, "AirportName")
-        const airportAirportQuery = test.createQueryInput();
+      jsonResult.Company = {
+        J: querycompanyOutput.Items[0]
+      };
 
-        res.json(testObject);
-      });
-    } catch (err) {
-      handleQueryError(err);
-    }
-    } catch (err) {
-      handleQueryError(err);
-    }
-}
+      let planetyperequest = new PrimaryKeyQueryRequest("PLANE-TYPE", plane.Items[0].PlaneType.S);
+      const queryplanetypeInput = planetyperequest.createQueryInput();
+      const queryplanetypeOutput = await dynamoDbClient.query(queryplanetypeInput).promise();
 
-exports.getTheFlightRoute = async function(req, res){
-
-  let myprequest = new PrimaryKeyQueryRequest("FLIGHT", req.params.flightnumber, "RouteId");
-  const queryInput = myprequest.createQueryInputForAttribute();
-
-  // Call DynamoDB's query API
-    executeQuery(dynamoDbClient, queryInput).then(() => {
-        console.info('Query API call has been executed.')
-        }
-    );
-   async function executeQuery(dynamoDbClient, queryInput) {
-      // Call DynamoDB's query API
-      try {
-        const queryOutput = await dynamoDbClient.query(queryInput).promise();
-        console.info('Query successful.');
-        res.json(queryOutput);
-      } catch (err) {
-        handleQueryError(err);
-      }
-    }
-}
-
-
-exports.getTheFlightNumber = async function(req, res){
-    
-    let myprequest = new PrimaryKeyQueryRequest("FLIGHT", req.params.flightnumber, "FlightNumber");
-    const queryInput = myprequest.createQueryInputForAttribute();
-
-    // Call DynamoDB's query API
-    executeQuery(dynamoDbClient, queryInput).then(() => {
-        console.info('Query API call has been executed.')
-        }
-    );
-
-    async function executeQuery(dynamoDbClient, queryInput) {
-      // Call DynamoDB's query API
-      try {
-        const queryOutput = await dynamoDbClient.query(queryInput).promise();
-        console.info('Query successful.');
-        res.json(queryOutput);
-      } catch (err) {
-        handleQueryError(err);
-      }
-    }
-}
-
-
-exports.getTheFlightDeparture = async function(req, res){
-  
-    let myprequest = new PrimaryKeyQueryRequest("FLIGHT", req.params.flightnumber, "DepartureTime");
-    const queryInput = myprequest.createQueryInputForAttribute();
-
-    // Call DynamoDB's query API
-    executeQuery(dynamoDbClient, queryInput).then(() => {
-        console.info('Query API call has been executed.')
-        }
-    );
-
-    async function executeQuery(dynamoDbClient, queryInput) {
-      // Call DynamoDB's query API
-      try {
-        const queryOutput = await dynamoDbClient.query(queryInput).promise();
-        console.info('Query successful.');
-        res.json(queryOutput);
-      } catch (err) {
-        handleQueryError(err);
-      }
-    }
-}
-
-
-exports.getTheFlightPlane = function(req, res){
-  const queryInput = createQueryInput(req.params.flightnumber);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-  );
-
-  async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-    try {
-      const queryOutput = await dynamoDbClient.query(queryInput).promise();
-      console.info('Query successful.');
-      res.json(queryOutput);
-    } catch (err) {
-      handleQueryError(err);
-    }
-  }
-  
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#ffe82 = :ffe82",
-      "ProjectionExpression": "#ffe80,#ffe81",
-      "ExpressionAttributeValues": {
-        ":ffe82": {
-          "S": "FLIGHT"
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#ffe80": req.slice(1).toString(),
-        "#ffe81": "PlaneNumber",
-        "#ffe82": "PK"
-      }
-    }
-  }
-}
-
-
-exports.getTheFlightPlaneTerminal = function(req, res){
-  const queryInput = createQueryInput(req.params.flightnumber);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-  );
-
-  async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-    try {
-      const queryOutput = await dynamoDbClient.query(queryInput).promise();
-      console.info('Query successful.');
-      res.json(queryOutput);
-    } catch (err) {
-      handleQueryError(err);
-    }
-  }
-  
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#ffe82 = :ffe82",
-      "ProjectionExpression": "#ffe80,#ffe81",
-      "ExpressionAttributeValues": {
-        ":ffe82": {
-          "S": "FLIGHT"
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#ffe80": req.slice(1).toString(),
-        "#ffe81": "Terminal",
-        "#ffe82": "PK"
-      }
-    }
-  }
-}
-
-
-
-exports.getTheRoute = function(req, res){
-  const queryInput = createQueryInput(req.params.routeid);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-   );
-    async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-  try {
-    const queryOutput = await dynamoDbClient.query(queryInput).promise();
-    console.info('Query successful.');
-    res.json(queryOutput);
+      jsonResult.PlaneType = {
+        J: queryplanetypeOutput.Items[0]
+      };
+     
+      res.json(jsonResult);
+      
+    });
   } catch (err) {
     handleQueryError(err);
-    }
-  }
-
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#089c0 = :089c0",
-      "FilterExpression": "#089c1 = :089c1",
-      "ExpressionAttributeValues": {
-        ":089c0": {
-          "S": "ROUTE"
-        },
-        ":089c1": {
-          "N": req.slice(1).toString(), //RouteId
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#089c0": "PK",
-        "#089c1": "RouteId"
-      }
-    }
   }
 }
 
 
-exports.getTheRouteDeparture = function(req, res){
-  const queryInput = createQueryInput(req.params.routeid);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-   );
-    async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-  try {
-    const queryOutput = await dynamoDbClient.query(queryInput).promise();
-    console.info('Query successful.');
-    res.json(queryOutput);
-  } catch (err) {
-    handleQueryError(err);
-    }
-  }
 
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#ed5e2 = :ed5e2",
-      "ProjectionExpression": "#ed5e0,#ed5e1",
-      "ExpressionAttributeValues": {
-        ":ed5e2": {
-          "S": "ROUTE"
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#ed5e0": req.slice(1).toString(), //RouteId
-        "#ed5e1": "DepartureAirport",
-        "#ed5e2": "PK"
-      }
-    }
-  }
-}
-
-
-exports.getTheRouteArrivalAirport = function(req, res){
-  const queryInput = createQueryInput(req.params.routeid);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-   );
-    async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-  try {
-    const queryOutput = await dynamoDbClient.query(queryInput).promise();
-    console.info('Query successful.');
-    res.json(queryOutput);
-  } catch (err) {
-    handleQueryError(err);
-    }
-  }
-
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#b11b2 = :b11b2",
-      "ProjectionExpression": "#b11b0,#b11b1",
-      "ExpressionAttributeValues": {
-        ":b11b2": {
-          "S": "ROUTE"
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#b11b0": req.slice(1).toString(), //RouteId
-        "#b11b1": "ArrivalAirport",
-        "#b11b2": "PK"
-      }
-    }
-  }
-}
-
-
-exports.getTheRouteFlightTime = function(req, res){
-  const queryInput = createQueryInput(req.params.routeid);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-   );
-    async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-  try {
-    const queryOutput = await dynamoDbClient.query(queryInput).promise();
-    console.info('Query successful.');
-    res.json(queryOutput);
-  } catch (err) {
-    handleQueryError(err);
-    }
-  }
-
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#c0d12 = :c0d12",
-      "ProjectionExpression": "#c0d10,#c0d11",
-      "ExpressionAttributeValues": {
-        ":c0d12": {
-          "S": "ROUTE"
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#c0d10": req.slice(1).toString(), //RouteId
-        "#c0d11": "TimeOfFlight",
-        "#c0d12": "PK"
-      }
-    }
-  }
-}
-
-
-exports.getThePlane = function(req, res){
-  const queryInput = createQueryInput(req.params.planenumber);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-   );
-    async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-  try {
-    const queryOutput = await dynamoDbClient.query(queryInput).promise();
-    console.info('Query successful.');
-    res.json(queryOutput);
-  } catch (err) {
-    handleQueryError(err);
-    }
-  }
-
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#e14e0 = :e14e0",
-      "FilterExpression": "#e14e1 = :e14e1",
-      "ExpressionAttributeValues": {
-        ":e14e0": {
-          "S": "PLANE"
-        },
-        ":e14e1": {
-          "S": req.slice(1).toString()
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#e14e0": "PK",
-        "#e14e1": "PlaneNumber"
-      }
-    }
-  }
-}
-
-
-exports.getThePlaneCompany = function(req, res){
-    const queryInput = createQueryInput(req.params.planenumber);
-    // Call DynamoDB's query API
-    executeQuery(dynamoDbClient, queryInput).then(() => {
-        console.info('Query API call has been executed.')
-        }
-     );
-    async function executeQuery(dynamoDbClient, queryInput) {
-    // Call DynamoDB's query API
-      try {
-        const queryOutput = await dynamoDbClient.query(queryInput).promise();
-        console.info('Query successful.');
-        res.json(queryOutput);
-      } catch (err) {
-        handleQueryError(err);
-        }
-    }
-  
-    function createQueryInput(req) {
-      return {
-        "TableName": "FLIGHT-SIMULATOR",
-        "ScanIndexForward": true,
-        "ConsistentRead": false,
-        "KeyConditionExpression": "#e14e0 = :e14e0",
-        "ProjectionExpression": "#e14e1,#e14e2",
-        "ExpressionAttributeValues": {
-          ":e14e0": {
-            "S": "PLANE"
-          }
-        },
-        "ExpressionAttributeNames": {
-          "#e14e0": "PK",
-          "#e14e1": req.slice(1).toString(),
-          "#e14e2": "CompanyName"
-        }
-      }
-    }
-}
-
-
-exports.getThePlaneType = function(req, res){
-  const queryInput = createQueryInput(req.params.planenumber);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-   );
-  async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-    try {
-      const queryOutput = await dynamoDbClient.query(queryInput).promise();
-      console.info('Query successful.');
-      res.json(queryOutput);
-    } catch (err) {
-      handleQueryError(err);
-      }
-  }
-
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#e14e0 = :e14e0",
-      "ProjectionExpression": "#e14e1,#e14e2",
-      "ExpressionAttributeValues": {
-        ":e14e0": {
-          "S": "PLANE"
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#e14e0": "PK",
-        "#e14e1": req.slice(1).toString(),
-        "#e14e2": "PlaneType"
-      }
-    }
-  }
-}
-
-
-exports.getTheAirport = function(req, res){
-  const queryInput = createQueryInput(req.params.airportacronym);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-   );
-  async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-    try {
-      const queryOutput = await dynamoDbClient.query(queryInput).promise();
-      console.info('Query successful.');
-      res.json(queryOutput);
-    } catch (err) {
-      handleQueryError(err);
-      }
-  }
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#e14e0 = :e14e0",
-      "FilterExpression": "#e14e1 = :e14e1",
-      "ExpressionAttributeValues": {
-        ":e14e0": {
-          "S": "AIRPORT"
-        },
-        ":e14e1": {
-          "S": req.slice(1).toString()
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#e14e0": "PK",
-        "#e14e1": "AirportAcronym"
-      }
-    }
-  }
-}
-
-
-exports.getTheAirportName = function(req, res){
-  const queryInput = createQueryInput(req.params.airportacronym);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-   );
-    async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-  try {
-    const queryOutput = await dynamoDbClient.query(queryInput).promise();
-    console.info('Query successful.');
-    res.json(queryOutput);
-  } catch (err) {
-    handleQueryError(err);
-    }
-  }
-
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#e14e0 = :e14e0",
-      "ProjectionExpression": "#e14e1,#e14e2",
-      "ExpressionAttributeValues": {
-        ":e14e0": {
-          "S": "AIRPORT"
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#e14e0": "PK",
-        "#e14e1": req.slice(1).toString(),
-        "#e14e2": "AirportName"
-      }
-    }
-  }
-}
-
-
-exports.getTheAirportTerminalNumber = function(req, res){
-  const queryInput = createQueryInput(req.params.airportacronym);
-  // Call DynamoDB's query API
-  executeQuery(dynamoDbClient, queryInput).then(() => {
-      console.info('Query API call has been executed.')
-      }
-   );
-    async function executeQuery(dynamoDbClient, queryInput) {
-  // Call DynamoDB's query API
-  try {
-    const queryOutput = await dynamoDbClient.query(queryInput).promise();
-    console.info('Query successful.');
-    res.json(queryOutput);
-  } catch (err) {
-    handleQueryError(err);
-    }
-  }
-
-  function createQueryInput(req) {
-    return {
-      "TableName": "FLIGHT-SIMULATOR",
-      "ScanIndexForward": true,
-      "ConsistentRead": false,
-      "KeyConditionExpression": "#e14e0 = :e14e0",
-      "ProjectionExpression": "#e14e1,#e14e2",
-      "ExpressionAttributeValues": {
-        ":e14e0": {
-          "S": "AIRPORT"
-        }
-      },
-      "ExpressionAttributeNames": {
-        "#e14e0": "PK",
-        "#e14e1": req.slice(1).toString(),
-        "#e14e2": "AirportTerminal"
-      }
-    }
-  }
-}
-
-
-// Handles errors during Query execution. Use recommendations in error messages below to 
-// add error handling specific to your application use-case. 
-function handleQueryError(err) {
+  // Handles errors during Query execution. Use recommendations in error messages below to 
+  // add error handling specific to your application use-case. 
+  function handleQueryError(err) {
     if (!err) {
       console.error('Encountered error object was empty');
       return;
@@ -638,8 +130,8 @@ function handleQueryError(err) {
     }
     // here are no API specific errors to handle for Query, common DynamoDB API errors are handled below
     handleCommonErrors(err);
-}
-  
+  }
+
   function handleCommonErrors(err) {
     switch (err.code) {
       case 'InternalServerError':

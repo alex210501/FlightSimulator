@@ -4,10 +4,15 @@
 
 First you have to open a command prompt on your machine and then you should go to the "AmazonDb" folder on your machine.  
 
-For example : cd C:\Users\hugo2\Documents\MA1\AmazonDb  
+For example : `cd C:\Users\hugo2\Documents\MA1\AmazonDb` 
 
-There you should execute this command to start the communication with the Dynamodb : java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb
+There you should execute this command to start the communication with the Dynamodb :  
+   
+`java -Djava.library.path=./DynamoDBLocal_lib -jar DynamoDBLocal.jar -sharedDb`
 
+You may sometime have to delete a table from your DynamoDb connection, for such you can execute this command : 
+  
+`aws dynamodb delete-table --table-name test --endpoint-url http://localhost:8000`
 
 ## :airplane: API requests descriptions   
 
