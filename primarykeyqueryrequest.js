@@ -32,6 +32,29 @@ class PrimaryKeyQueryRequest {
         }
       }
 
+      createQueryInputInteger() {
+        return {
+
+          "TableName": "FLIGHT-SIMULATOR",
+          "ScanIndexForward": true,
+          "ConsistentRead": false,
+          "KeyConditionExpression": "#e14e0 = :e14e0",
+          "FilterExpression": "#e14e1 = :e14e1",
+          "ExpressionAttributeValues": {
+            ":e14e0": {
+              "S": this.primarykey
+            },
+            ":e14e1": {
+              "N": this.attribute//.slice(1).toString()
+            }
+          },
+          "ExpressionAttributeNames": {
+            "#e14e0": "PK",
+            "#e14e1": this.attributename
+          }
+        }
+      }
+
       
     // Call this function when you need a single attribute of a primery key
     createQueryInputForAttribute() {

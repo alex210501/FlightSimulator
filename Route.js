@@ -17,7 +17,7 @@ let FlightFunctions = require('./FlightFunctions.js');
 
  */
 
-//router.get('/flight/alldata/:flightnumber', FlightFunctions.getTheAlltheFlightInfo);
+router.get('/flight/alldata/:flightnumber', FlightFunctions.getTheAlltheFlightInfo);
 
 router.get('/flight/:flightnumber', FlightFunctions.getTheFlight);
 

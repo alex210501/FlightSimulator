@@ -21,23 +21,50 @@ exports.getTheFlight = async function(req, res){
   let myprequest = new PrimaryKeyQueryRequest("FLIGHT", req.params.flightnumber, "FlightNumber");
   const queryInput = myprequest.createQueryInput();
   
-  // Call DynamoDB's query API
-    executeQuery(dynamoDbClient, queryInput).then(() => {
-        console.info('Query API call has been executed.')
-        }
-    );
-  async function executeQuery(dynamoDbClient, queryInput) {
-    // Call DynamoDB's query API
-    try {
-      const queryOutput = await dynamoDbClient.query(queryInput).promise();
-      console.info('Query successful.');
-      res.json(queryOutput);
-    } catch (err) {
-      handleQueryError(err);
-    }
+  try {
+    const queryOutput = await dynamoDbClient.query(queryInput).promise();
+    console.info('Query successful.');
+    res.json(queryOutput);
+  } catch (err) {
+    handleQueryError(err);
   }
 }
 
+exports.getTheAlltheFlightInfo = async function(req, res){
+  
+  let myprequest = new PrimaryKeyQueryRequest("FLIGHT", req.params.flightnumber, "FlightNumber");
+  const queryInput = myprequest.createQueryInput();
+  let testObject = {};
+  
+  try {
+    /*const queryOutput = await dynamoDbClient.query(queryInput).promise();
+    console.info('Query successful.');
+    res.json(queryOutput); */
+    try {
+      const queryOutput = dynamoDbClient.query(queryInput).promise().then(async (flight) => {
+        let test = new PrimaryKeyQueryRequest("ROUTE", flight.Items[0].RouteId.N, "RouteId")
+        const testQuery = test.createQueryInputInteger();
+        const testOutput = await dynamoDbClient.query(testQuery).promise();
+        testObject = flight.Items[0];
+
+        testObject.Route = {
+          J: testOutput.Items[0]
+        };
+
+        let departureAirport = new PrimaryKeyQueryRequest("AIRPORT", flight.Items[0].DepartureAirport.S, "AirportName")
+        const departureAirportQuery = test.createQueryInput();
+        let airportAirport = new PrimaryKeyQueryRequest("AIRPORT", flight.Items[0].ArrivalAirport.S, "AirportName")
+        const airportAirportQuery = test.createQueryInput();
+
+        res.json(testObject);
+      });
+    } catch (err) {
+      handleQueryError(err);
+    }
+    } catch (err) {
+      handleQueryError(err);
+    }
+}
 
 exports.getTheFlightRoute = async function(req, res){
 
