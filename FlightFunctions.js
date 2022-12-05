@@ -119,6 +119,16 @@ exports.getThePlane = async function(req, res){
   }
 }
 
+
+/*
+    ***********************************************************************************************
+    *                                                                                             *
+    *         Request to get the flightdeparture by time departure in parameter                   *
+    *                                                                                             *
+    ***********************************************************************************************
+*/
+
+
 exports.getTheFlightDeparture = async function(req, res){
   let jsonResult = {};
   let timerequest = new TimeDepartureQueryRequest("FLIGHT", req.params.time.slice(1).toString());
