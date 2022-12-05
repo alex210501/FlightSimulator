@@ -10,8 +10,11 @@ const { json } = require('body-parser');
 const dynamoDbClient = createDynamoDbClient();
 function createDynamoDbClient() {
     // Use the following config instead when using DynamoDB Local
-    AWS.config.update({region: 'local', endpoint: 'http://localhost:8000'});
-    
+    AWS.config.update({region: 'local', endpoint: 'http://localhost:8000',  credentials: {
+    accessKeyId: 'user',
+    secretAccessKey: 'password'
+  }});
+    console.log(AWS.config);
     return new AWS.DynamoDB();
 }
 
@@ -48,7 +51,7 @@ exports.getTheFlight = async function(req, res){
       const querydepInput = depairportrequest.createQueryInput();
       const querydepOutput = await dynamoDbClient.query(querydepInput).promise();
 
-      jsonResult.DepartureAirport = {
+      jsonResult.Route.J.DepartureAirport = {
         J: querydepOutput.Items[0]
       };
 
@@ -57,14 +60,14 @@ exports.getTheFlight = async function(req, res){
       const queryarvInput = arvairportrequest.createQueryInput();
       const queryarvOutput = await dynamoDbClient.query(queryarvInput).promise();
 
-      jsonResult.ArrivalAirport = {
+      jsonResult.Route.J.ArrivalAirport = {
         J: queryarvOutput.Items[0]
       };
       
      
       res.json(jsonResult);
       
-    });
+    }).catch((err) => console.log(err));
 
   } catch (err) {
     handleQueryError(err);
