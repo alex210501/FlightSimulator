@@ -11,7 +11,7 @@ const { json } = require('body-parser');
 const dynamoDbClient = createDynamoDbClient();
 function createDynamoDbClient() {
     // Use the following config instead when using DynamoDB Local
-    AWS.config.update({region: 'local', endpoint: 'http://localhost:8081',  credentials: {
+    AWS.config.update({region: 'local', endpoint: 'http://localhost:8000',  credentials: {
     accessKeyId: 'user',
     secretAccessKey: 'password'
   }});
@@ -130,18 +130,52 @@ exports.getThePlane = async function(req, res){
 
 
 exports.getTheFlightDeparture = async function(req, res){
-  let jsonResult = {};
+  let jsonResult = [];
   let timerequest = new TimeDepartureQueryRequest("FLIGHT", req.params.time.slice(1).toString());
   const queryInput = timerequest.createQueryInput();
+  let jsonarray = {};
 
   try {
   
     const queryOutput = dynamoDbClient.query(queryInput).promise().then(async (flight) => {
-      console.log(flight);
-      jsonResult = flight;
+      console.log(flight.Items);
 
+      for (let i in flight.Items)
+      {
+        jsonResult.push({});
+
+        let routerequest = new PrimaryKeyQueryRequest("ROUTE", flight.Items[i].Route.S);
+        const queryrouteInput = routerequest.createQueryInput();
+        const queryrouteOutput = await dynamoDbClient.query(queryrouteInput).promise();
+        jsonResult[jsonResult.length - 1] = flight.Items[i];
+  
+        jsonResult[jsonResult.length - 1].Route = {
+          J: queryrouteOutput.Items[0]
+        };
+  
+        let depairportrequest = new PrimaryKeyQueryRequest("AIRPORT", queryrouteOutput.Items[0].DepartureAirport.S);
+        const querydepInput = depairportrequest.createQueryInput();
+        const querydepOutput = await dynamoDbClient.query(querydepInput).promise();
+  
+        jsonResult[jsonResult.length - 1].Route.J.DepartureAirport = {
+          J: querydepOutput.Items[0]
+        };
+  
+        
+        let arvairportrequest = new PrimaryKeyQueryRequest("AIRPORT", queryrouteOutput.Items[0].ArrivalAirport.S);
+        const queryarvInput = arvairportrequest.createQueryInput();
+        const queryarvOutput = await dynamoDbClient.query(queryarvInput).promise();
+  
+        jsonResult[jsonResult.length - 1].Route.J.ArrivalAirport = {
+          J: queryarvOutput.Items[0]
+        };
+      }
+
+      // jsonarray.push(jsonResult[jsonResult.length - 1])
+      console.log(jsonResult[jsonResult.length - 1])
       res.json(jsonResult);
     });
+
   } catch (err) {
     handleQueryError(err);
   }
