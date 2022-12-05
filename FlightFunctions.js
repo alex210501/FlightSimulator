@@ -1,6 +1,7 @@
 // All the imports
 
 const PrimaryKeyQueryRequest = require('./primarykeyqueryrequest.js');
+const TimeDepartureQueryRequest = require('./timedeparturequeryrequest.js');
 const AWS = require('aws-sdk');
 const { json } = require('body-parser');
 
@@ -10,7 +11,7 @@ const { json } = require('body-parser');
 const dynamoDbClient = createDynamoDbClient();
 function createDynamoDbClient() {
     // Use the following config instead when using DynamoDB Local
-    AWS.config.update({region: 'local', endpoint: 'http://localhost:8000',  credentials: {
+    AWS.config.update({region: 'local', endpoint: 'http://localhost:8081',  credentials: {
     accessKeyId: 'user',
     secretAccessKey: 'password'
   }});
@@ -112,6 +113,24 @@ exports.getThePlane = async function(req, res){
      
       res.json(jsonResult);
       
+    });
+  } catch (err) {
+    handleQueryError(err);
+  }
+}
+
+exports.getTheFlightDeparture = async function(req, res){
+  let jsonResult = {};
+  let timerequest = new TimeDepartureQueryRequest("FLIGHT", req.params.time.slice(1).toString());
+  const queryInput = timerequest.createQueryInput();
+
+  try {
+  
+    const queryOutput = dynamoDbClient.query(queryInput).promise().then(async (flight) => {
+      console.log(flight);
+      jsonResult = flight;
+
+      res.json(jsonResult);
     });
   } catch (err) {
     handleQueryError(err);

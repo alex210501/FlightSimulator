@@ -29,7 +29,7 @@ router.get('/flight/:flightnumber', FlightFunctions.getTheFlight);
 
 //router.get('/flight/flightnumber/:flightnumber', FlightFunctions.getTheFlightNumber);
 
-//router.get('/flight/departuretime/:flightnumber', FlightFunctions.getTheFlightDeparture);
+router.get('/flight/departuretime/:time', FlightFunctions.getTheFlightDeparture);
 
 //router.get('/flight/plane/:flightnumber', FlightFunctions.getTheFlightPlane);
 
