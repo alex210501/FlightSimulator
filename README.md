@@ -103,22 +103,23 @@ You can download the database table using the file [database][database-file].
 <table>
     <thead>
         <tr>
-            <th>Partition Key (PK)</th>
-            <th colspan=6>Attributes</th>
+            <td>Partition Key (PK)</td>
+            <td>Sort Key (SK)<td>            
+            <th colspan=5>Attributes</th>
         </tr>
     </thead>
     <tbody>
         <tr>
         	<td>FLIGHT</td>
-            <td>RouteId</td>
             <td>FlightNumber</td>
             <td>DepartureTime</td>
             <td>PlaneNumber</td>
             <td>Terminal</td>
+            <td>Route</td>
         </tr>
         <tr>
         	<td>ROUTE</td>
-            <td>RouteId</td>
+            <td>Route</td>
             <td>DepartureAirport</td>
             <td>ArrivalAirport</td>
             <td>TimeOfFlight</td>
@@ -126,12 +127,12 @@ You can download the database table using the file [database][database-file].
         <tr>
         	<td>PLANE</td>
             <td>PlaneNumber</td>
-            <td>CompanyName</td>
+            <td>Company</td>
             <td>PlaneType</td>
         </tr>
         <tr>
         	<td>COMPANY</td>
-            <td>CompanyName</td>
+            <td>Company</td>
             <td>IATA</td>
             <td>OACI</td>
             <td>CompanyCountry</td>
@@ -148,7 +149,7 @@ You can download the database table using the file [database][database-file].
         </tr>
         <tr>
         	<td>AIRPORT</td>
-            <td>AirportName</td>
+            <td>Airport</td>
             <td>AirportAcronym</td>
             <td>AirportCountry</td>
             <td>AirportCountry</td>
