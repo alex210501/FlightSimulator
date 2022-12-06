@@ -3,7 +3,7 @@
   "ModelMetadata": {
     "Author": "",
     "DateCreated": "Nov 23, 2022, 10:59 AM",
-    "DateLastModified": "Nov 28, 2022, 02:09 PM",
+    "DateLastModified": "Dec 06, 2022, 11:11 AM",
     "Description": "Database for the flight simulator",
     "AWSService": "Amazon DynamoDB",
     "Version": "3.0"
@@ -252,6 +252,83 @@
           },
           "AirportTerminal": {
             "N": "3"
+          }
+        },
+        {
+          "PK": {
+            "S": "FLIGHT"
+          },
+          "SK": {
+            "S": "EN5021"
+          },
+          "DepartureTime": {
+            "N": "3600"
+          },
+          "Plane": {
+            "S": "0"
+          },
+          "Terminal": {
+            "N": "3"
+          },
+          "Route": {
+            "S": "BRU-LHR"
+          }
+        },
+        {
+          "PK": {
+            "S": "ROUTE"
+          },
+          "SK": {
+            "S": "BRU-LHR"
+          },
+          "DepartureAirport": {
+            "S": "Brussels Airport"
+          },
+          "ArrivalAirport": {
+            "S": "Heathrow Airport"
+          },
+          "TimeOfFlight": {
+            "N": "3600"
+          }
+        },
+        {
+          "PK": {
+            "S": "AIRPORT"
+          },
+          "SK": {
+            "S": "Brussels Airport"
+          },
+          "AirportAcronym": {
+            "S": "BRU"
+          },
+          "AirportCountry": {
+            "S": "Belgium"
+          },
+          "AirportCity": {
+            "S": "Brussels"
+          },
+          "AirportTerminal": {
+            "N": "1"
+          }
+        },
+        {
+          "PK": {
+            "S": "AIRPORT"
+          },
+          "SK": {
+            "S": "Heathrow Airport"
+          },
+          "AirportAcronym": {
+            "S": "LHR"
+          },
+          "AirportCountry": {
+            "S": "England"
+          },
+          "AirportCity": {
+            "S": "London"
+          },
+          "AirportTerminal": {
+            "N": "5"
           }
         }
       ],
