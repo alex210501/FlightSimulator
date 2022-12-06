@@ -3,7 +3,7 @@ class TimeDepartureQueryRequest {
     constructor(primarykey, min) {
         this.primarykey = primarykey;
         this.min = min;
-        this.max = min+3600;
+        this.max = min+3599;
     }
 
     // Call this function when you need all the attributes of a primary key, sortkey couple
