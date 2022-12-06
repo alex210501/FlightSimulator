@@ -1,9 +1,11 @@
 //Import express
 let express = require('express');
+const cors = require('cors');
 
 //Initialize the app
 let app = express();
 
+app.use(cors());
 app.use(express.urlencoded({extended:true}));
 
 let router = require('./Route');
