@@ -17,7 +17,15 @@ You may sometime have to delete a table from your DynamoDb connection, for such 
 ## :signal_strength: Start the Server
 
 First of all you must have Node JS installed on your computer. To do so I suggest you to follow this tutorial : 
-[Link to install Node JS](https://code.visualstudio.com/docs/nodejs/nodejs-tutorial). 
+[Link to install Node JS](https://code.visualstudio.com/docs/nodejs/nodejs-tutorial).
+
+Then you should create a file named `credentials.json` in the `Flightsimulator` folder. This file must contain your AmazonDB credentials like this :
+```properties
+{
+    "accessKeyId": "user",
+    "secretAccessKey": "password"
+}
+```
 
 Once Node JS is installed in your folder, you can start the server by enterring this command in a terminal : 
 - `cd .\FlightSimulator\ `
