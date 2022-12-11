@@ -14,6 +14,19 @@ You may sometime have to delete a table from your DynamoDb connection, for such 
   
 `aws dynamodb delete-table --table-name test --endpoint-url http://localhost:8000`
 
+## :signal_strength: Start the Server
+
+First of all you must have Node JS installed on your computer. To do so I suggest you to follow this tutorial : 
+`https://code.visualstudio.com/docs/nodejs/nodejs-tutorial`  
+
+Once Node JS is installed in your folder, you can start the server by enterring this command in a terminal : 
+- `cd .\FlightSimulator\ `
+- `node .\server.js` or `npm start`  
+
+You'll find the port on which the server is running in the file [server.js](./server.js). By default we putted it on the port : `8023`.
+
+Also you'll find in the file [FlightFunctions.js](FlightFunctions.js) that the communication with the Amazon DynamoDB is running on the port : `8000`.
+
 ## :airplane: API requests descriptions   
 
 ### :sunglasses: The flight
