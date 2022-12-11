@@ -27,6 +27,8 @@ Then you should create a file named `credentials.json` in the `Flightsimulator` 
 }
 ```
 
+Once it's done don't forget to remove the first line of the [gitignore file](.gitignore)
+
 Once Node JS is installed in your folder, you can start the server by enterring this command in a terminal : 
 - `cd .\FlightSimulator\ `
 - `node .\server.js` or `npm start`  
