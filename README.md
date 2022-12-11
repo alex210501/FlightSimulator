@@ -17,7 +17,7 @@ You may sometime have to delete a table from your DynamoDb connection, for such 
 ## :signal_strength: Start the Server
 
 First of all you must have Node JS installed on your computer. To do so I suggest you to follow this tutorial : 
-`https://code.visualstudio.com/docs/nodejs/nodejs-tutorial`  
+[Link to install Node JS](https://code.visualstudio.com/docs/nodejs/nodejs-tutorial). 
 
 Once Node JS is installed in your folder, you can start the server by enterring this command in a terminal : 
 - `cd .\FlightSimulator\ `
@@ -33,81 +33,46 @@ Also you'll find in the file [FlightFunctions.js](FlightFunctions.js) that the c
 
 A flight will contain :
 
-- a route
-- the flightnumber
-- the departure time
-- the plane
-- the terminal ( of the plane's current airport)  
+- The departure time
+- The plane
+- the terminal
+- the route
 
-For the flight the API will do this :
+Request for the flight that contains also the route, the departure and the arrival airports :
 
-- GET the flight by ID
-- GET the route by ID 
-- GET the flightnumber 
-- GET the departure time 
-- GET the plane
-- GET the terminal
+- GET the flight by ID => `/flight/:flightnumber`
 
--> app.get('/flight/:parameter') and then redirected to '/'
-
-Where parameter will be the flight's ID
-
-### :cloud: The Routes    
-
-A route will contain :  
-
-
-- the departure place ( airport)
-- the arrival place ( airport)
-- the time of the flight 
-
-For the route the API will do this :
-
-- GET the route by ID
-- GET the route's departure airport by name
-- GET the route's arrival airport by name
-- GET the route's flight time by ID
-
--> app.get('/route/:parameter') and then redirected to '/'
-
-Where parameter will be the route's ID
+Where the parameter flightnumber will be for example : `FR4855`
 
 ### :airplane: The plane
 
 The plane will contain :
 
-- The plane's ID
 - The company
 - The type of the plane
 
-For the plane the API will do this :
+Request for the plane that also contains the plane-type and the company :
 
-- GET the plane by ID
-- GET the company
-- GET the type of the plane
+- GET the plane by plane number => `/plane/:planenumber`
 
--> app.get('/plane/:parameter') and then redirected to '/'
-
-Where parameter will be the plane's ID
+Where the parameter planenumber will be for example : `0`
 
 
-### :tokyo_tower: The airport
+### :tokyo_tower: The flights, airports and departure time
 
 The airport will contain :
 
-- an ID
-- a name
-- terminals
+- A name
+- An acronym
+- A country
+- A city
+- Terminals
 
-For the airport the API will do this :
+Request to get the flightdeparture by time departure in parameter :
 
-- GET an airport by ID
-- GET the name
-- GET the number of terminals
+- GET the flights by departure time : `/flight/departuretime/:time`
 
--> app.get('/airport/:airportid') and then redirected to '/'
-
-Where parameter will be the airport's name
+Where the parameter time will be for example : `0` or `100` or `200`
 
 ## :books: Database
 
