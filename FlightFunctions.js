@@ -4,17 +4,14 @@ const PrimaryKeyQueryRequest = require('./primarykeyqueryrequest.js');
 const TimeDepartureQueryRequest = require('./timedeparturequeryrequest.js');
 const AWS = require('aws-sdk');
 const { json } = require('body-parser');
-
+var Credentials = require('./credentials.json');
 
 // Create the DynamoDB Client with the region you want
 
 const dynamoDbClient = createDynamoDbClient();
 function createDynamoDbClient() {
     // Use the following config instead when using DynamoDB Local
-    AWS.config.update({region: 'local', endpoint: 'http://localhost:8000',  credentials: {
-    accessKeyId: 'user',
-    secretAccessKey: 'password'
-  }});
+    AWS.config.update({region: 'local', endpoint: 'http://localhost:8000',  credentials: Credentials});
     console.log(AWS.config);
     return new AWS.DynamoDB();
 }
